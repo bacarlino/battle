@@ -3,18 +3,17 @@ import random
 
 
 def line():
-        print('-------------------------------------------------------')
+        print('----------------------------------------------')
         
-
-
 class Character:
-    def __init__(self, name='player', spd=5, is_player=False):      
+    def __init__(self, name='player', spd=5, is_player=False, skills=[]):      
         self.name = name
-        self.hp = 50
-        self.sp = 20
+        self.hp = 20
+        self.sp = 10
         self.atk = 5
         self.speed = spd
         self.actions = [self.attack, self.defend, self.use_skill]
+        self.skills = skills
         self.is_player = is_player
         self.is_defending = False
 
@@ -24,13 +23,11 @@ class Character:
     def __repr__(self):
         return f'Character(name={self.name}, hp={self.hp}, sp={self.sp})'
 
-    def attack(self, defender):
-        print(f"{self.name} is attacking {defender.name}")
+    def attack(self):
         dmg = int(random.uniform(self.atk - self.atk*0.25, self.atk + self.atk*0.25))
         return dmg
 
     def take_damage(self, amt):
-        print(f"{self.name} takes {amt} damage")
         self.hp -= amt
 
     def defend(self):
@@ -38,21 +35,16 @@ class Character:
         self.is_defending = True
 
     def use_skill(self, skill):
-        # skill should have a name, description, and damage amount
-        print("Using a skill")
+        print("Removing SP")
+        self.sp -= skill.sp
 
 
-class Skill:
-
-    def __init__(self, name, description, damage):
-        self.name = name
-        self.description = description
-        self.damage = damage
-
-class DragonsBreath(Skill):
-
-    def __init__(self):
-        super().__init__(self)
+class PutridFlatulant:
+    name = "Putrid Flatulant"
+    desc = "A thick green cloud of skin melting filth"
+    sp = 5
+    dmg = 10
+    coold = 5
 
 
 class Fight:
@@ -79,37 +71,53 @@ class Fight:
             print(f"- {enemy}")
 
     
-    def display_options(self):
+    def display_options(self, fighter):
         line()      
         print('Your choices:')
         print()
         print('(A)ttack | (D)efend | (S)kill | (I)tem | (R)un')
         print()
+        choice = input('Type a command (or first letter) and press ENTER: ')
+        self.proc_choice(fighter, choice)
 
     def set_turn_order(self):
         self.all_participants.sort(key=lambda player: player.speed)
+        #random.choice(self.all_participants)
 
-    def proc_choice(self, player_char, choice):
+    def proc_choice(self, player, choice):
         line()
         """Process user input"""
         if choice in ["a", "A", "attack", "Attack", "ATTACK", "1"]:
 
             print("Who do you want to attack?")
             print()
-            options = enumerate(self.enemies)
             for num, enemy in enumerate(self.enemies):
-                print(f"{num+1} - {enemy}")
+                print(f"({num+1}) - {enemy}")
             print()
             target = input("Type a number: ")
-
-            self.handle_attack(player_char, self.enemies[int(target)-1])
+            self.handle_attack(player, self.enemies[int(target)-1])
             
         elif choice in ["d", "D", "defend", "Defend", "DEFEND", "2"]:
-            print("DEFENDING!")
-            self.handle_defend(player_char)
+            self.handle_defend(player)
 
         elif choice in ["s", "S", "skill", "Skill", "SKILL",  "3"]:
-            print("USING A SKILL!")
+            print("Which skill do you want to use?")
+            print()
+            for num, skill in enumerate(player.skills):
+                print(f"{num+1} - {skill.name}")
+            print()
+            input_num = input("Type a number: ")
+            skill = player.skills[int(input_num)-1]
+
+            if player.sp >= skill.sp:
+                print(f"Who do you want to use {skill.name} on?")
+                print()
+                for num, enemy in enumerate(self.enemies):
+                    print(f"({num+1}) - {enemy}")
+                print()
+                target = input("Type a number: ")
+                defender = self.enemies[int(target)-1]
+                self.handle_skill(player, skill, defender)
 
         elif choice in ["i", "I", "item", "Item", "ITEM", "4"]:
             print("USING AN ITEM!")
@@ -121,45 +129,65 @@ class Fight:
             print("HUH?")
 
 
-    def handle_attack(self, attacker, defender):
+    def damage_exchange(self):
+        pass 
 
-        line()
-        amt = attacker.attack(defender)
+    def handle_attack(self, attacker, defender):
+        
+        amt = attacker.attack()
         if defender.is_defending:
             amt = int(amt / 2)
-        print(".")
-        time.sleep(0.5)
-        print(".")
-        time.sleep(0.5)
-        print(".")
-        time.sleep(0.5)
         defender.take_damage(amt)
+
+        line()
+        print(f"{attacker.name} is attacking {defender.name}")  
+        print(".")
+        time.sleep(0.2)
+        print(".")
+        time.sleep(0.2)
+        print(".")
+        time.sleep(0.2)
+        print(f"{defender.name} takes {amt} damage")
 
     def handle_defend(self, defender):
         line()
         defender.defend()
 
-    def handle_skill(self, user):
-        pass
+    def handle_skill(self, user, skill, defender):
+
+        if user.sp >= skill.sp:
+            dmg = skill.dmg
+            adj = dmg*0.25
+            dmg = int(random.uniform(dmg - adj, dmg + adj))
+            if defender.is_defending:
+                dmg = int(dmg / 2)
+            user.use_skill(skill)
+            defender.take_damage(dmg)
+            line()
+            print(f"{user.name} uses {skill.name} on {defender.name}")  
+            print("*")
+            time.sleep(0.25)
+            print("*")
+            time.sleep(0.25)
+            print("*")
+            time.sleep(0.25)
+            print(f"{defender.name} takes {dmg} damage")
+        else:
+            print(f"{user.name} doesn't have {skill.sp} SP")
+
+        
 
     def handle_ai(self, fighter):
         action = random.choice(fighter.actions)
         target = random.choice(self.player_team)
+        skill = random.choice(fighter.skills)
 
         if action == fighter.attack:
             self.handle_attack(fighter, target)
         if action == fighter.defend:
             self.handle_defend(fighter)
-        
-
-
-
-
-    def player_turn(self):
-        pass
-    
-    def enemy_turn(self):
-        pass
+        if action == fighter.use_skill:
+            self.handle_skill(fighter, skill, target)
 
     def fight(self):
         """
@@ -190,9 +218,9 @@ class Fight:
                 if fighter.is_player:
                     fighter.is_defending = False
                     # Display our options, ask for input, and process the input
-                    self.display_options()
-                    choice = input('Type a command and press ENTER: ')
-                    self.proc_choice(fighter, choice)
+                    self.display_options(fighter)
+                    # choice = input('Type a command and press ENTER: ')
+                    # self.proc_choice(fighter, choice)
                 else:
                     # AI should decide what to do and to which player character
                     # Dumb AI to choose actions and targets at random
@@ -201,16 +229,14 @@ class Fight:
                     # Smart AI to determine actions and targets conditionally
                 time.sleep(1.5)
 
-
-
 # TESTING
 
-# Create Characters
-char1 = Character("Billy", 5, True)
-char2 = Character("Johnny", 3, True)
-char3 = Character("Clarence", 6)
-char4 = Character("Tina", 5)
-char5 = Character("Jimbo", 4)
+# Create Characters __init__(name='player', spd=5, is_player=False, skills=[])
+char1 = Character("Billy", 5, True, [PutridFlatulant()])
+char2 = Character("Johnny", 3, True, [PutridFlatulant()])
+char3 = Character("Clarence", 6, False, [PutridFlatulant()])
+char4 = Character("Tina", 5, False, [PutridFlatulant()])
+char5 = Character("Jimbo", 4, False, [PutridFlatulant()])
 
 # Create Teams
 player_team = [char1, char2]
