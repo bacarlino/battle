@@ -10,7 +10,7 @@ class Character:
         self.name = name
         self.hp = 20
         self.sp = 10
-        self.atk = 5
+        self.atk = 100
         self.speed = spd
         self.actions = [self.attack, self.defend, self.use_skill]
         self.skills = skills
@@ -35,17 +35,43 @@ class Character:
         self.is_defending = True
 
     def use_skill(self, skill):
-        print("Removing SP")
         self.sp -= skill.sp
 
 
 class PutridFlatulant:
     name = "Putrid Flatulant"
     desc = "A thick green cloud of skin melting filth"
+    sp = 10
+    dmg = 15
+    cd = 5
+
+class RoundhouseKick:
+    name = "Roundhouse Kick"
+    desc = "A powerful spinning kick to the face"
+    sp = 3
+    dmg = 8
+    cd = 5
+
+class ThroatPunch:
+    name = "Throat Punch"
+    desc = "A quick sharp jab right to the jugular"
     sp = 5
     dmg = 10
-    coold = 5
+    cd = 5
 
+class Uppercut:
+    name = "Uppercut"
+    desc = "A massive sweeping blow to the chin"
+    sp = 7
+    dmg = 12
+    cd = 5
+
+class SuperSlap:
+    name = "Super Slap"
+    desc = "A wide swinging open palm slap to the face"
+    sp = 4
+    dmg = 9
+    cd = 5
 
 class Fight:
 
@@ -58,6 +84,7 @@ class Fight:
     def display_title(self):
         line()
         print("A FIGHT HAS STARTED!")
+        input("Press ENTER to start")
     
     
     def display_fighters(self):
@@ -73,9 +100,9 @@ class Fight:
     
     def display_options(self, fighter):
         line()      
-        print('Your choices:')
+        print(f"What does {fighter.name} do?")
         print()
-        print('(A)ttack | (D)efend | (S)kill | (I)tem | (R)un')
+        print('(A)ttack | (D)efend | (S)kill')
         print()
         choice = input('Type a command (or first letter) and press ENTER: ')
         self.proc_choice(fighter, choice)
@@ -92,7 +119,7 @@ class Fight:
             print("Who do you want to attack?")
             print()
             for num, enemy in enumerate(self.enemies):
-                print(f"({num+1}) - {enemy}")
+                print(f"({num+1}) {enemy}")
             print()
             target = input("Type a number: ")
             self.handle_attack(player, self.enemies[int(target)-1])
@@ -104,12 +131,13 @@ class Fight:
             print("Which skill do you want to use?")
             print()
             for num, skill in enumerate(player.skills):
-                print(f"{num+1} - {skill.name}")
+                print(f"({num+1}) {skill.name} - {skill.sp} SP - {skill.desc}")
             print()
             input_num = input("Type a number: ")
             skill = player.skills[int(input_num)-1]
 
             if player.sp >= skill.sp:
+                line()
                 print(f"Who do you want to use {skill.name} on?")
                 print()
                 for num, enemy in enumerate(self.enemies):
@@ -142,11 +170,11 @@ class Fight:
         line()
         print(f"{attacker.name} is attacking {defender.name}")  
         print(".")
-        time.sleep(0.2)
+        time.sleep(0.5)
         print(".")
-        time.sleep(0.2)
+        time.sleep(0.5)
         print(".")
-        time.sleep(0.2)
+        time.sleep(0.5)
         print(f"{defender.name} takes {amt} damage")
 
     def handle_defend(self, defender):
@@ -164,13 +192,14 @@ class Fight:
             user.use_skill(skill)
             defender.take_damage(dmg)
             line()
-            print(f"{user.name} uses {skill.name} on {defender.name}")  
+            print(f"{user.name} uses {skill.name} and delivers {skill.desc.lower()} to {defender.name}")
+            time.sleep(2)  
             print("*")
-            time.sleep(0.25)
+            time.sleep(0.75)
             print("*")
-            time.sleep(0.25)
+            time.sleep(0.75)
             print("*")
-            time.sleep(0.25)
+            time.sleep(0.75)
             print(f"{defender.name} takes {dmg} damage")
         else:
             print(f"{user.name} doesn't have {skill.sp} SP")
@@ -210,10 +239,10 @@ class Fight:
             # Iterate through the turn order list
             for fighter in self.all_participants:
                 self.display_fighters()
-                time.sleep(1.5)
+                time.sleep(2)
                 line()
                 print(f"~~ It's {fighter.name}'s turn ~~")
-                time.sleep(1.5)
+                time.sleep(2)
                 # If it's a player character's turn, display their options for that character
                 if fighter.is_player:
                     fighter.is_defending = False
@@ -227,16 +256,16 @@ class Fight:
                     self.handle_ai(fighter)
                     
                     # Smart AI to determine actions and targets conditionally
-                time.sleep(1.5)
+                time.sleep(2)
 
 # TESTING
 
 # Create Characters __init__(name='player', spd=5, is_player=False, skills=[])
-char1 = Character("Billy", 5, True, [PutridFlatulant()])
-char2 = Character("Johnny", 3, True, [PutridFlatulant()])
-char3 = Character("Clarence", 6, False, [PutridFlatulant()])
+char1 = Character("Billy", 5, True, [Uppercut(), ThroatPunch()])
+char2 = Character("Johnny", 3, True, [RoundhouseKick(), SuperSlap])
+char3 = Character("Clarence", 6, False, [ThroatPunch()])
 char4 = Character("Tina", 5, False, [PutridFlatulant()])
-char5 = Character("Jimbo", 4, False, [PutridFlatulant()])
+char5 = Character("Jimbo", 4, False, [SuperSlap()])
 
 # Create Teams
 player_team = [char1, char2]
