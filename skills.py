@@ -1,5 +1,27 @@
 
 
+class Skill:
+    def __init__(self, name, desc, sp, dmg, cd, targets=1):
+        self.name = name
+        self.desc = desc
+        self.sp = sp
+        self.dmg = dmg
+        self.cd = cd
+        self.targets = targets
+
+
+class TestSkill(Skill):
+    def __init__(self):
+        super().__init__(
+            "Test Skill",
+            "A skill just used for testing...that's all",
+            5,
+            9999,
+            5,
+            1
+        )
+
+
 class PutridFlatulant:
     name = "Putrid Flatulant"
     desc = "A thick green cloud of skin melting filth"

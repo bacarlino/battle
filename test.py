@@ -6,7 +6,7 @@ from skills import *
 
 # Create Characters __init__(name='player', hp=20, spd=5, is_player=False, skills=[])
 char1 = Character("Billy", 22, 5, True, [Uppercut(), ThroatPunch()])
-char2 = Character("Johnny", 18, 3, True, [RoundhouseKick(), SuperSlap])
+char2 = Character("Johnny", 18, 3, True, [RoundhouseKick(), SuperSlap(), TestSkill()])
 char3 = Character("Clarence", 10, 6, False, [ThroatPunch()])
 char4 = Character("Tina", 8, 5, False, [PutridFlatulant()])
 char5 = Character("Jimbo", 12, 4, False, [SuperSlap()])
