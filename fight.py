@@ -44,7 +44,7 @@ class Fight:
         defender.take_damage(amt)
         self.cli.display_attack(attacker, defender, amt, is_crit)
         if defender.is_dead():
-            self.cli.display_fighter_died(defender)
+            self.cli.display_fighter_died(defender.name)
 
     def handle_defend(self, defender):
         defender.defend()
@@ -60,7 +60,7 @@ class Fight:
         defender.take_damage(dmg)
         self.cli.display_use_skill(attacker.name, skill, defender.name, dmg)
         if defender.is_dead():
-            self.cli.display_fighter_died(defender)
+            self.cli.display_fighter_died(defender.name)
         
 
     def handle_ai(self, fighter):

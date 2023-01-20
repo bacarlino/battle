@@ -95,6 +95,7 @@ class CLI:
     def choose_skill(self, skills):
         while True:
             try:
+                line()
                 print("Which skill do you want to use?")
                 print()
                 time.sleep(.5)
@@ -103,7 +104,7 @@ class CLI:
                 print()
                 time.sleep(.5)
                 input_num = input("Type a number: ")
-                if 0 < int(input_num) < len(skills):
+                if 0 < int(input_num) < len(skills)+1:
                     return skills[int(input_num)-1]
                 else:
                     print("What skill? Try again...")
@@ -121,7 +122,7 @@ class CLI:
                 time.sleep(.5)
                 input_num = input("Type a number: ")
                 if 0 < int(input_num) < len(enemy_team):
-                    return self.enemy_team[int(input_num)-1]
+                    return enemy_team[int(input_num)-1]
                 else:
                     print("Who? Try again...")
             except ValueError:
