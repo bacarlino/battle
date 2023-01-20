@@ -14,7 +14,7 @@ class Character:
         self.skills = skills
         self.is_player = is_player
         self.is_defending = False
-        self.dead = False
+        #self.dead = False
 
     def __str__(self):
         return (
@@ -36,19 +36,27 @@ class Character:
 
     def take_damage(self, amt):
         if self.is_defending:
-            amt = amt / 2
+            amt = int(amt / 2)
         result = self.hp - amt
         if result <= 0:
             self.hp = 0
-            self.dead = True
         else:
             self.hp = result
         
     def defend(self):
         self.is_defending = True
+    
+    def stop_defending(self):
+        self.is_defending = False
+
+    def can_use_skill(self, skill):
+        return self.sp >= skill.sp
 
     def use_skill(self, skill):
         self.sp -= skill.sp
+
+    def is_dead(self):
+        return self.hp <= 0
 
 
 class Team:
