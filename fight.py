@@ -1,5 +1,6 @@
 import time
 import random
+import os
 
 
 class Fight:
@@ -82,6 +83,11 @@ class Fight:
     def set_turn_order(self):
         self.all_participants = self.player_team + self.enemy_team
         self.all_participants.sort(key=lambda player: player.speed)
+    
+    def clear_fighter_d(self, fighter):
+        if fighter.is_defending:
+            fighter.stop_defending()
+
 
     def fight(self):
         
@@ -92,19 +98,20 @@ class Fight:
 
         # MAIN BATTLE LOOP
         while True:
-            self.cli.display_round_num(round)
+            # self.cli.display_round_num(round)
             self.set_turn_order()
             for fighter in self.all_participants:
                 if not fighter.is_dead():
-                    if fighter.is_defending:
-                        fighter.stop_defending()
-                    self.cli.display_all_fighters(self.player_team, self.enemy_team)
-                    self.cli.display_fighters_turn(fighter.name)
+                    self.clear_fighter_d(fighter)
+                    # os.system('clear')
+                    self.cli.display_fighters_turn(fighter.name, fighter.is_player, round)
+                    self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
                     if fighter.is_player:
-                        choice = self.cli.display_options()
+                        self.cli.display_options()
+                        choice = self.cli.get_option(fighter.name)
                         self.proc_choice(fighter, choice)
                     else:
-                        self.cli.press_enter_pause()
+                        self.cli.enemy_turn_pause()
                         self.handle_ai(fighter)
 
                 player_deaths = 0
