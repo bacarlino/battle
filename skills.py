@@ -22,12 +22,25 @@ class TestSkill(Skill):
         )
 
 
+class AnotherSkill(Skill):
+    def __init__(self):
+        super().__init__(
+            "Another Test Skill",
+            "Another skill made just for testing",
+            5,
+            4732432748392748329,
+            5,
+            0
+        )
+
+
 class PutridFlatulant:
     name = "Putrid Flatulant"
     desc = "A thick green cloud of skin melting filth"
     sp = 5
     dmg = 10
     cd = 5
+    targets = 0
 
 
 class RoundhouseKick:
