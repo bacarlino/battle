@@ -1,7 +1,5 @@
+# Byte-compiled / optimized / DLL files
 venv
 __pycache__/
-*.pyc
-__pycache__/character.cpython-311.pyc
-__pycache__/cli.cpython-311.pyc
-__pycache__/fight.cpython-311.pyc
-__pycache__/skills.cpython-311.pyc
+*.py[cod]
+*$py.class
