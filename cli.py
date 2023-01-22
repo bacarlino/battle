@@ -73,8 +73,9 @@ class CLI:
     
     def get_option(self, name):
         print("Your Turn - Type a LETTER then press ENTER")
-        choice = input(f'{green(name)}: ')
         print()
+        time.sleep(T)
+        choice = input(f'{green(name)}: ')
         return choice
 
     def display_action(self, symbol):
@@ -88,19 +89,16 @@ class CLI:
 
     def choose_attack_target(self, enemy_team):
         line()
-        print()
         print(f"Who do you want to {red('attack?')}")
-        time.sleep(T)
         print()
+        time.sleep(T)
         valid = []
         for num, enemy in enumerate(enemy_team):
             valid.append(str(num+1))
             print(f"({num+1}) {enemy}")
         print()
         while True:
-            time.sleep(T)
             target = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-            print()
             if target in valid:
                 return target
             else:
@@ -136,7 +134,7 @@ class CLI:
                 print()
                 time.sleep(T)
                 input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                print()
+                line()
                 if 0 < int(input_num) <= len(skills):
                     return skills[int(input_num)-1]
                 else:
