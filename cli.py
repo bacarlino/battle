@@ -15,21 +15,41 @@ class CLI:
 
     def enemy_turn_pause(self):
         input(f"Enemy Turn - Press {blue('ENTER / RETURN')} to continue")
-        print()
 
     def display_invalid_command(self):
-        print("Huh? That's not a valid command. Try again...")
+        print("That's not an option. Try again...")
 
     def display_title(self):
         line()
+        # print()
+        # print(f"A {red('FIGHT')} has started!")
+        print(
+            '''
+ (        (                      )               
+ )\ )     )\ )     (          ( /(      *   )    
+(()/(    (()/(     )\ )       )\())   ` )  /(    
+ /(_))    /(_))   (()/(      ((_)\     ( )(_))   
+(_))_|   (_))      /(_))_     _((_)   (_(_())    
+| |_     |_ _|    (_)) __|   | || |   |_   _|    
+| __|     | |       | (_ |   | __ |     | |      
+|_|      |___|       \___|   |_||_|     |_|      
+                                                '''
+        )
+
         print()
-        print(f"A {red('FIGHT')} has started!")
+
+    def display_instructions(self):
+        print(
+            "Instructions:\n"
+            f"- {red('Defeat')} all of the enemies by reducing their HP (hit points) to 0 \n"
+            f"- {yellow('Defend')} to reduce incoming damage\n"
+            f"- {magenta('Skills')} use SP (skill points) and do more damage\n"
+            f"- {cyan('Items')} can be used for various effects"
+            )
         print()
-        self.press_enter_pause()
 
     def display_all_fighters(self, player_team, fighter, enemy_team):
-        # line()
-        print()
+        line()
         print(green('Your Team'))
         #time.sleep(T)
         for player in player_team:
@@ -43,7 +63,7 @@ class CLI:
                 
         time.sleep(T)
         print()
-        print(red('Your Enemies'))
+        print(red("Your Enemies"))
         #time.sleep(T)
         for enemy in enemy_team:
             if enemy == fighter:
@@ -56,25 +76,21 @@ class CLI:
         print()
         time.sleep(T)
 
-    def display_fighters_turn(self, name, is_player, round):
-        line()
-        if is_player:
-            print(f"Round {round} - {green(name)}'s Turn")
-        else:
-            print(f"Round {round} - {red(name)}'s Turn")
-        #line()
+    def display_fighters_turn(self, name, round):
+        
+        print(f"*** Round {round} - {name}'s Turn ***")
+        
         time.sleep(T)
 
     def display_options(self):
-        print('+------------------------------------------+')
-        print(f'| {red("(A)ttack")} | {yellow("(D)efend")} | {magenta("(S)kill)")} | {cyan("(I)tem)")} |')
-        print('+------------------------------------------+')
-        #time.sleep(T)
+        print('+-----------------------------------------+')
+        print(f'| {red("(A)ttack")} | {yellow("(D)efend")} | {magenta("(S)kill")} | {cyan("(I)tem)")} |')
+        print('+-----------------------------------------+')
+        time.sleep(T)
     
     def get_option(self, name):
         print("Your Turn - Type a LETTER then press ENTER")
         print()
-        time.sleep(T)
         choice = input(f'{green(name)}: ')
         return choice
 
@@ -88,22 +104,24 @@ class CLI:
         time.sleep(.5)
 
     def choose_attack_target(self, enemy_team):
-        line()
-        print(f"Who do you want to {red('attack?')}")
-        print()
-        time.sleep(T)
-        valid = []
-        for num, enemy in enumerate(enemy_team):
-            valid.append(str(num+1))
-            print(f"({num+1}) {enemy}")
-        print()
         while True:
-            target = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-            if target in valid:
-                return target
-            else:
-                print("Who? Try again...")
-        
+            try:
+                line()
+                print(f"Who do you want to {red('attack?')}")
+                print()
+                time.sleep(T)
+                for num, enemy in enumerate(enemy_team):
+                    print(f"{blue(num+1)} | {enemy}")
+                print()
+                time.sleep(T)
+                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+                if 0 < int(input_num) <= len(enemy_team):
+                    return enemy_team[int(input_num)-1]
+                else:
+                    print("Who? Try again...")
+                    time.sleep(T)
+            except ValueError:
+                print("That's not a number. Try again...")
 
     def display_attack(self, attacker, defender, amt, is_crit):
         line()
@@ -120,7 +138,8 @@ class CLI:
 
     def display_defend(self, defender):
         line()
-        print(f"{defender.name} takes a defensive stance")
+        print(f"{defender.name} {yellow('defends')}")
+        time.sleep(1.5)
 
     def choose_skill(self, skills):
         while True:
@@ -148,11 +167,10 @@ class CLI:
                 print(f"Who do you want to use {magenta(skill)} on?")
                 print()
                 for num, enemy in enumerate(enemy_team):
-                    print(f"({num+1}) {enemy}")
+                    print(f"({blue(num+1)}) {enemy}")
                 print()
                 time.sleep(T)
                 input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                print()
                 if 0 < int(input_num) <= len(enemy_team):
                     return enemy_team[int(input_num)-1]
                 else:
@@ -169,6 +187,57 @@ class CLI:
         print(f"{attacker} uses {skill.name} on {defender} and delivers {skill.desc.lower()}")
         self.display_action("*")
         print(f"{defender} takes {dmg} damage")
+
+
+    def choose_item(self, items):
+        while True:
+            try:
+                line()
+                print("Which item do you want to use?")
+                print()
+                time.sleep(T)
+                for num, item in enumerate(items):
+                    print(f"({num+1}) {item.name}{' '*(18-len(item.name))}| {item.description}")
+                print()
+                time.sleep(T)
+                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+                line()
+                if 0 < int(input_num) <= len(items):
+                    return items[int(input_num)-1]
+                else:
+                    print("What item? Try again...")
+            except ValueError:
+                print("That's not a number. Try again...")
+
+    def choose_item_target(self, item: str, targets: list):
+        while True:
+            try:
+                print(f"Who do you want to use {cyan(item)} on?")
+                print()
+                for num, target in enumerate(targets):
+                    print(f"({blue(num+1)}) {target}")
+                print()
+                time.sleep(T)
+                
+                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+                if 0 < int(input_num) <= len(targets):
+                    return targets[int(input_num)-1]
+                else:
+                    print("Who? Try again...")
+            except ValueError:
+                print("That's not a number. Try again...")
+
+    def display_use_item(self, item_user, item, item_target, amount):
+        line()
+        print(f"{item_user} uses {item.name} on {item_target}")
+        self.display_action("$")
+        if item.type == "damage":
+            print(f"{item_target} takes {amount} damage")
+        elif item.type == "heal":
+            print(f"{item_target} is healed for {amount} HP")
+
+
+
 
     def display_fighter_died(self, fighter):
         print(f"{fighter} is dead!")

@@ -1,4 +1,6 @@
 import random
+from utilities import *
+from items import Item
 
 
 class Character:
@@ -14,12 +16,15 @@ class Character:
         self.skills = skills
         self.is_player = is_player
         self.is_defending = False
-        #self.dead = False
+        self.active = True
+        self.items = []
 
     def __str__(self):
         return (
-            f"{self.name}{' '*(10-len(self.name))}| {self.hp} HP | {self.sp} SP | "
-            f"{'Defending' if self.is_defending else ''}"
+            f"{self.name}{' '*(10-len(self.name))}|"
+            f"{' '*(4-len(str(self.hp)))} {self.hp} HP |"
+            f"{' '*(4-len(str(self.sp)))}{self.sp} SP | "
+            f"{yellow('Defending' if self.is_defending else '')}"
         )
 
     def __repr__(self):
@@ -55,11 +60,41 @@ class Character:
     def use_skill(self, skill):
         self.sp -= skill.sp
 
+    def heal(self, amount):
+        self.hp += amount
+
     def is_dead(self):
         return self.hp <= 0
+
+    def add_item(self, item: Item) -> None:
+        self.items.append(item)
+    
+    def remove_item(self, item: Item) -> None:
+        self.items.remove(item)
+
+    def use_item(self, item: Item, target) -> None:
+        item.use(target)
 
 
 class Team:
     """Not implemented"""
-    def __init__(self, members=[]):
-        self.members = []
+    def __init__(self, members: list[Character]):
+        self.full_team = members
+        self.active_team = members
+        self.inactive_team = []
+
+    def get_active_team(self) -> list[Character]:
+        return self.active_team
+
+    def add_member(self, member) -> None:
+        self.full_team.append(member)
+        self.active_team.append(member)
+    
+    def remove_member(self, member) -> None:
+        self.full_team.remove(member)
+    
+    def set_active(self, member) -> None:
+        pass
+
+
+

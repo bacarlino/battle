@@ -1,6 +1,7 @@
 import time
 import random
-import os
+from character import Character
+
 
 
 class Fight:
@@ -9,35 +10,49 @@ class Fight:
         self.cli = cli
         self.player_team = player_team
         self.enemy_team = enemy_team
-        self.all_participants = []
-        self.turn_order=[]
 
-    def proc_choice(self, player, choice):
+    def get_avail_targets(self, team: list) -> list[Character]:
+        return [target for target in team if not target.is_dead()]
+
+    def handle_player_turn(self, fighter):
+        while True:
+            self.cli.display_options()
+            choice = self.cli.get_option(fighter.name)
+            self.proc_choice(fighter, choice)
+            break
+
+    def proc_choice(self, fighter, choice):
+        avail_targets = self.get_avail_targets(self.enemy_team)
+
         if choice in ["a", "A", "attack", "Attack", "ATTACK", "1"]:
-            target = self.cli.choose_attack_target(self.enemy_team)
-            self.handle_attack(player, self.enemy_team[int(target)-1])
+            target = self.cli.choose_attack_target(avail_targets)
+            self.handle_attack(fighter, target)
 
         elif choice in ["d", "D", "defend", "Defend", "DEFEND", "2"]:
-            self.handle_defend(player)
+            self.handle_defend(fighter)
 
         elif choice in ["s", "S", "skill", "Skill", "SKILL",  "3"]:
-            skill = self.cli.choose_skill(player.skills)
-            if player.can_use_skill(skill):
-                target = self.cli.choose_skill_target(skill.name, self.enemy_team)
-                self.handle_skill(player, skill, target)
+            skill = self.cli.choose_skill(fighter.skills)
+            if fighter.can_use_skill(skill):
+                target = self.cli.choose_skill_target(skill.name, avail_targets)
+                self.handle_skill(fighter, skill, target)
             else:
-                self.cli.display_skill_fail(player.name, skill.sp)
+                self.cli.display_skill_fail(fighter.name, skill.sp)
                 self.cli.display_options()
             
         elif choice in ["i", "I", "item", "Item", "ITEM", "4"]:
-            print("USING AN ITEM!")
+            item = self.cli.choose_item(fighter.items)
+            if item.type == "heal":
+                avail_targets = self.get_avail_targets(self.player_team)
+            target = self.cli.choose_item_target(item.name, avail_targets)
+            self.handle_item(fighter, item, target)
 
         elif choice in ["r", "R", "run", "Run", "RUN", "5"]:
             print("RUNNING AWAY!")
         
         else:
             self.cli.display_invalid_command()
-            self.display_options(player)
+            self.cli.display_options()
 
 
     def handle_attack(self, attacker, defender): 
@@ -62,10 +77,19 @@ class Fight:
         self.cli.display_use_skill(attacker.name, skill, defender.name, dmg)
         if defender.is_dead():
             self.cli.display_fighter_died(defender.name)
+
+    def handle_item(self, item_user, item, item_target):
+        amount = item.amount
+        item_user.use_item(item, item_target)
+        self.cli.display_use_item(item_user.name, item, item_target.name, amount)
+        if item_target.is_dead():
+            self.cli.display_fighter_died(item_target.name)
+
+        
         
 
-    def handle_ai(self, fighter):
-        avail_target = [target for target in self.player_team if not target.is_dead()]
+    def handle_ai_turn(self, fighter):
+        avail_target = self.get_avail_targets(self.player_team)
         action = random.choice(fighter.actions)
         target = random.choice(avail_target)
         skill = random.choice(fighter.skills)
@@ -81,10 +105,11 @@ class Fight:
                 self.handle_ai(fighter)
 
     def set_turn_order(self):
-        self.all_participants = self.player_team + self.enemy_team
-        self.all_participants.sort(key=lambda player: player.speed)
+        self.turn_order = self.player_team + self.enemy_team
+        self.turn_order.sort(key=lambda player: player.speed)
     
-    def clear_fighter_d(self, fighter):
+    
+    def clear_fighter_defense(self, fighter):
         if fighter.is_defending:
             fighter.stop_defending()
 
@@ -95,24 +120,26 @@ class Fight:
         round = 1
 
         self.cli.display_title()
+        self.cli.display_instructions()
+        self.cli.press_enter_pause()
 
         # MAIN BATTLE LOOP
         while True:
-            # self.cli.display_round_num(round)
             self.set_turn_order()
-            for fighter in self.all_participants:
-                if not fighter.is_dead():
-                    self.clear_fighter_d(fighter)
-                    # os.system('clear')
-                    self.cli.display_fighters_turn(fighter.name, fighter.is_player, round)
-                    self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
-                    if fighter.is_player:
-                        self.cli.display_options()
-                        choice = self.cli.get_option(fighter.name)
-                        self.proc_choice(fighter, choice)
-                    else:
-                        self.cli.enemy_turn_pause()
-                        self.handle_ai(fighter)
+            for fighter in self.turn_order:
+                if  fighter.is_dead():
+                    continue
+                self.clear_fighter_defense(fighter)
+                self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
+                self.cli.display_fighters_turn(fighter.name, round)
+                if fighter.is_player:
+                    self.handle_player_turn(fighter)
+                else:
+                    self.cli.enemy_turn_pause()
+                    self.handle_ai_turn(fighter)
+
+
+
 
                 player_deaths = 0
                 enemy_deaths = 0
