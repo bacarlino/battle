@@ -56,8 +56,9 @@ class Fight:
         if attacker.is_player:
             avail_targets = self.get_avail_targets(self.enemy_team)
             target = self.cli.choose_attack_target(avail_targets)
-
         amt, is_crit = attacker.attack()
+        if target.defending:
+            amt = int(amt / 2)
         target.take_damage(amt)
         self.cli.display_attack(attacker, target, amt, is_crit)
         if target.is_dead():
@@ -150,10 +151,9 @@ class Fight:
         while True:
             self.set_turn_order()
             for fighter in self.turn_order:
-                if  fighter.is_dead():
-                    continue
-                
                 self.clear_fighter_defense(fighter)
+                if  fighter.is_dead():
+                    continue                
                 self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
                 self.cli.display_fighters_turn(fighter.name, round)
                 

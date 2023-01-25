@@ -41,12 +41,9 @@ class Character:
         return dmg, crit
 
     def take_damage(self, amt):
-        if self.defending:
-            amt = int(amt / 2)
         result = self.hp - amt
         if result <= 0:
             self.hp = 0
-            self.stop_defending()
         else:
             self.hp = result
         
