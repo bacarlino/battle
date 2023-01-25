@@ -1,22 +1,21 @@
 
 
 class Item:
-    
-    def use(self):
-        pass
+    def __str__(self):
+        return self.name
 
 
-class Potion:
-    name = "Potion"
+class Bandage(Item):
+    name = "Bandage"
     type = "heal"
     amount = 6
-    description = "A healing potion that restores 6 HP"
+    description = "A basic bandage that heals 6 HP"
 
     def use(self, target):
         target.heal(self.amount)
 
 
-class Knife:
+class Knife(Item):
     name = "Knife"
     type = "damage"
     amount = 8
@@ -25,3 +24,11 @@ class Knife:
     def use(self, target):
         target.take_damage(self.amount)
 
+
+class PepperSpray(Item):
+    name = "Pepper Spray"
+    type = "status"
+    effect = "blind"
+    description = "Burns eyes"
+
+ 

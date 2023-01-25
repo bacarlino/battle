@@ -20,14 +20,14 @@ class CLI:
         print("That's not an option. Try again...")
 
     def display_title(self):
-        line()
+        #line()
         # print()
         # print(f"A {red('FIGHT')} has started!")
         print(
             '''
+
  (        (                      )               
- )\ )     )\ )     (          ( /(      *   )    
-(()/(    (()/(     )\ )       )\())   ` )  /(    
+ )\ )     )\ )     (          ( /(          )    
  /(_))    /(_))   (()/(      ((_)\     ( )(_))   
 (_))_|   (_))      /(_))_     _((_)   (_(_())    
 | |_     |_ _|    (_)) __|   | || |   |_   _|    
@@ -35,8 +35,6 @@ class CLI:
 |_|      |___|       \___|   |_||_|     |_|      
                                                 '''
         )
-
-        print()
 
     def display_instructions(self):
         print(
@@ -78,7 +76,7 @@ class CLI:
 
     def display_fighters_turn(self, name, round):
         
-        print(f"*** Round {round} - {name}'s Turn ***")
+        print(f"Round {round} - {name}'s Turn")
         
         time.sleep(T)
 
@@ -88,7 +86,7 @@ class CLI:
         print('+-----------------------------------------+')
         time.sleep(T)
     
-    def get_option(self, name):
+    def get_main_option(self, name):
         print("Your Turn - Type a LETTER then press ENTER")
         print()
         choice = input(f'{green(name)}: ')
@@ -102,6 +100,36 @@ class CLI:
         time.sleep(.5)
         print(symbol*3)
         time.sleep(.5)
+
+
+    def choose(self, action, choices, named=None):
+
+        prompts = {
+            "attack": f"Who do you want to {red('attack?')}",
+            "skill": f"Which {magenta('skill')} do you want to use?",
+            "skill_target": f"Who do you want to use {magenta(named)} on?",
+            "item": "Which item do you want to use?",
+            "item_target": f"Who do you want to use {cyan(named)} on?"
+        }
+
+        while True:
+            try:
+                line()
+                print(prompts[action])
+                print()
+                time.sleep(T)
+                for num, option in enumerate(choices):
+                    print(f"{blue(num+1)} | {option}")
+                print()
+                time.sleep(T)
+                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+                if 0 < int(input_num) <= len(choices):
+                    return choices[int(input_num)-1]
+                else:
+                    print("That's not a choice. Try again...")
+                    time.sleep(T)
+            except ValueError:
+                print("That's not a number. Try again...")
 
     def choose_attack_target(self, enemy_team):
         while True:
@@ -149,7 +177,7 @@ class CLI:
                 print()
                 time.sleep(T)
                 for num, skill in enumerate(skills):
-                    print(f"({num+1}) {skill.name}{' '*(18-len(skill.name))}| {skill.sp} SP |")
+                    print(f"{blue(num+1)} | {skill.name}{' '*(18-len(skill.name))}| {skill.sp} SP |")
                 print()
                 time.sleep(T)
                 input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
@@ -188,7 +216,6 @@ class CLI:
         self.display_action("*")
         print(f"{defender} takes {dmg} damage")
 
-
     def choose_item(self, items):
         while True:
             try:
@@ -197,7 +224,7 @@ class CLI:
                 print()
                 time.sleep(T)
                 for num, item in enumerate(items):
-                    print(f"({num+1}) {item.name}{' '*(18-len(item.name))}| {item.description}")
+                    print(f"{blue(num+1)} | {item.name}{' '*(18-len(item.name))}| {item.description}")
                 print()
                 time.sleep(T)
                 input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
@@ -235,9 +262,6 @@ class CLI:
             print(f"{item_target} takes {amount} damage")
         elif item.type == "heal":
             print(f"{item_target} is healed for {amount} HP")
-
-
-
 
     def display_fighter_died(self, fighter):
         print(f"{fighter} is dead!")
