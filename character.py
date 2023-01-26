@@ -3,6 +3,41 @@ from utilities import *
 from items import Item
 
 
+class StatusEffect:
+    
+    def __init__(self, duration):
+        self.duration = duration
+
+    def decrease_duration(self, amount):
+        self.duration -= amount
+
+    def increase_duration(self, amount):
+        self.duration += amount
+
+
+class Blinded(StatusEffect):
+    name = "Blinded"
+    description = "Significantly decreased accuracy"
+
+    def __init__(self, duration=1):
+        super().__init__(duration)
+
+class Unconcious(StatusEffect):
+    name = "Unconcious"
+    description = "Lose a turn during the next round"
+    
+    def __init__(self, duration=1):
+        super().__init__(duration)
+
+class Amped(StatusEffect):
+    name = "Amped"
+    duration = 1
+    description = "Gain an extra turn during the next round"
+
+    def __init__(self, duration=1):
+        super().__init__(duration)
+
+
 class Character:
     def __init__(self, name='Player', hp=20, spd=5, skills=[], is_player=False):      
         self.name = name
@@ -75,18 +110,14 @@ class Character:
         self.statuses.append(status)
         print("TESTING: ADDED STATUS")
 
-    
-
-    
-# class Player(Character):
-#     pass
-#     #is_player = True
-
-# class Enemy(Character):
-    
-#     pass
-#     #self.actions = [super().attack, self.defend, self.use_skill]
-
+    def turn_refresh(self):
+        """Reset defending status, reduce skill cooldowns and status durations"""
+        if self.defending:
+            self.stop_defending()
+        for skill in self.skills:
+            skill.reduce_cooldown(1)
+        for status in self.statuses:
+            status.decrease_duration(1)
 
 
 

@@ -183,7 +183,7 @@ class Fight:
         while True:
             self.set_turn_order()
             for fighter in self.turn_order:
-                self.clear_fighter_defense(fighter)
+                fighter.turn_refresh()
                 if  fighter.is_dead():
                     continue                
                 self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
