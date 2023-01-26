@@ -5,9 +5,6 @@ class Item:
     def __str__(self) -> str:
         return self.name
 
-    def use(self) -> tuple[str, int, list]:
-        return (self.type, self.amount, self.effects)
-
 
 class HealHPItem(Item):
     type = "heal"
@@ -24,18 +21,17 @@ class DamageHPItem(Item):
     stat = "hp"
 
 
+class DebuffItem(Item):
+    type = "debuff"
+
+
 class Bandage(HealHPItem):
     name = "Bandage"
-    type = "heal"
     amount = 6
     description = "A basic bandage that heals 6 HP"
 
-    def use(self, target):
-        target.heal(self.amount)
-        
 
-
-class Knife(Item):
+class Knife(DamageHPItem):
     name = "Knife"
     type = "damage"
     amount = 8
@@ -45,10 +41,9 @@ class Knife(Item):
         target.take_damage(self.amount)
 
 
-class PepperSpray(Item):
+class PepperSpray(DebuffItem):
     name = "Pepper Spray"
-    type = "status"
-    effect = "blind"
+    status = "Blinded"
     description = "Burns eyes"
 
  

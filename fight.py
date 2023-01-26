@@ -96,26 +96,45 @@ class Fight:
 
     def choose_item(self, item_user):
         if not item_user.items:
-            self.cli.display_no_items()
-            self.handle_player_turn()
+            self.cli.display_no_items(item_user.name)
+            self.handle_player_turn(item_user)
             return
         item = self.cli.choose("item", item_user.items)
         if item.type == "heal":
             avail_targets = self.get_avail_targets(self.player_team)
-        else:
+            target = self.cli.choose("item_target", avail_targets, item.name)
+            self.handle_heal_hp_item(item_user, item, target)
+        elif item.type == "damage":
             avail_targets = self.get_avail_targets(self.enemy_team)
-
-        target = self.cli.choose("item_target", avail_targets, item.name)
-        self.handle_item(item_user, item, target)
-
-    def choose_target():
-        pass
+            target = self.cli.choose("item_target", avail_targets, item.name)
+            self.handle_damage_item(item_user, item, target)
+        elif item.type == "buff":
+            pass
+        elif item.type == "debuff":
+            avail_targets = self.get_avail_targets(self.enemy_team)
+            target = self.cli.choose("item_target", avail_targets, item.name)
+            self.handle_debuff_item(item_user, item, target)
 
     def handle_heal_hp_item(self, item_user, item, item_target):
         item_user.remove_item(item)
         item_target.add_hp(item.amount)
         self.cli.display_use_item(item_user.name, item.name, item_target.name)
         self.cli.display_heal(item_target.name, item.amount)
+    
+    def handle_damage_item(self, item_user, item, item_target):
+        item_user.remove_item(item)
+        item_target.take_damage(item.amount)
+        self.cli.display_use_item(item_user.name, item.name, item_target.name)
+        self.cli.display_take_damage(item_target.name, item.amount)
+        if item_target.is_dead():
+            self.cli.display_fighter_died(item_target.name)
+
+    def handle_debuff_item(self, item_user, item, item_target):
+        item_user.remove_item(item)
+        item_target.add_status(item.status)
+        self.cli.display_use_item(item_user.name, item.name, item_target.name)
+        self.cli.display_add_status(item_target.name, item.status)
+
 
     def handle_item(self, item_user, item, item_target):
         amount = item.amount

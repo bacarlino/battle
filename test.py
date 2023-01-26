@@ -23,15 +23,9 @@ char5 = Character("Jimbo", 12, 4, [SuperSlap(), Uppercut()])
 # char5.add_skill([SuperSlap(), Uppercut()])
 
 
-char1.add_item(items.Knife())
 char2.add_item(items.Knife())
-char3.add_item(items.Knife())
-char4.add_item(items.Knife())
-char5.add_item(items.Knife())
-
 char1.add_item(items.Bandage())
-char2.add_item(items.Bandage())
-# char2.add_item(items.PepperSpray())
+char2.add_item(items.PepperSpray())
 
 
 player_team = [char1, char2]

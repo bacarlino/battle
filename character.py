@@ -4,7 +4,6 @@ from items import Item
 
 
 class Character:
-    """Characters for player and enemies"""
     def __init__(self, name='Player', hp=20, spd=5, skills=[], is_player=False):      
         self.name = name
         self.hp = hp
@@ -25,7 +24,8 @@ class Character:
             f"{self.name}{' '*(10-len(self.name))}|"
             f"{' '*(4-len(str(self.hp)))} {self.hp} HP |"
             f"{' '*(4-len(str(self.sp)))}{self.sp} SP | "
-            f"{yellow('Defending' if self.defending else '')}"
+            f"{yellow('Defending ' if self.defending else '')}"
+            f"{red('Blinded ') if 'Blinded' in self.statuses else ''}"
         )
 
     def __repr__(self):
@@ -59,23 +59,23 @@ class Character:
     def use_skill(self, skill):
         self.sp -= skill.sp
 
-    def heal(self, amount):
+    def add_hp(self, amount):
         self.hp += amount
 
     def is_dead(self):
         return self.hp <= 0
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item):
         self.items.append(item)
     
-    def remove_item(self, item: Item) -> None:
+    def remove_item(self, item: Item):
         self.items.remove(item)
 
-    def use_item(self, item: Item, target) -> None:
-        item.use(target)
+    def add_status(self, status):
+        self.statuses.append(status)
+        print("TESTING: ADDED STATUS")
 
-    def resolve_item(self):
-        pass
+    
 
     
 # class Player(Character):
