@@ -1,11 +1,30 @@
 
 
 class Item:
-    def __str__(self):
+
+    def __str__(self) -> str:
         return self.name
 
+    def use(self) -> tuple[str, int, list]:
+        return (self.type, self.amount, self.effects)
 
-class Bandage(Item):
+
+class HealHPItem(Item):
+    type = "heal"
+    stat = "hp"
+
+
+class GiveSPItem(Item):
+    type = "heal"
+    stat = "sp"
+
+
+class DamageHPItem(Item):
+    type = "damage"
+    stat = "hp"
+
+
+class Bandage(HealHPItem):
     name = "Bandage"
     type = "heal"
     amount = 6
@@ -13,6 +32,7 @@ class Bandage(Item):
 
     def use(self, target):
         target.heal(self.amount)
+        
 
 
 class Knife(Item):

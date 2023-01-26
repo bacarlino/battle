@@ -55,7 +55,7 @@ class Fight:
     def handle_attack(self, attacker, target=None):
         if attacker.is_player:
             avail_targets = self.get_avail_targets(self.enemy_team)
-            target = self.cli.choose_attack_target(avail_targets)
+            target = self.cli.choose("attack", avail_targets)
         amt, is_crit = attacker.attack()
         if target.defending:
             amt = int(amt / 2)
@@ -74,12 +74,12 @@ class Fight:
         if skill_user.can_use_skill(skill):
             avail_targets = self.get_avail_targets(self.enemy_team)
             target = self.cli.choose("skill_target", avail_targets, skill.name)
-            self.use_skill(skill_user, target, skill)
+            self.handle_skill(skill_user, target, skill)
         else:    
             self.cli.display_skill_fail(skill_user.name, skill.sp)
             self.cli.display_options()
 
-    def use_skill(self, skill_user, target, skill):
+    def handle_skill(self, skill_user, target, skill):
 
         # damage calc method?
         dmg = skill.dmg
@@ -95,6 +95,10 @@ class Fight:
             self.cli.display_fighter_died(target.name)
 
     def choose_item(self, item_user):
+        if not item_user.items:
+            self.cli.display_no_items()
+            self.handle_player_turn()
+            return
         item = self.cli.choose("item", item_user.items)
         if item.type == "heal":
             avail_targets = self.get_avail_targets(self.player_team)
@@ -102,9 +106,18 @@ class Fight:
             avail_targets = self.get_avail_targets(self.enemy_team)
 
         target = self.cli.choose("item_target", avail_targets, item.name)
-        self.use_item(item_user, item, target)
+        self.handle_item(item_user, item, target)
 
-    def use_item(self, item_user, item, item_target):
+    def choose_target():
+        pass
+
+    def handle_heal_hp_item(self, item_user, item, item_target):
+        item_user.remove_item(item)
+        item_target.add_hp(item.amount)
+        self.cli.display_use_item(item_user.name, item.name, item_target.name)
+        self.cli.display_heal(item_target.name, item.amount)
+
+    def handle_item(self, item_user, item, item_target):
         amount = item.amount
         item_user.use_item(item, item_target)
         self.cli.display_use_item(item_user.name, item, item_target.name, amount)
@@ -122,7 +135,7 @@ class Fight:
             self.handle_defend(fighter)
         elif action == "skill":
             if fighter.can_use_skill(skill):
-                self.use_skill(fighter, target, skill)
+                self.handle_skill(fighter, target, skill)
             else:
                 self.handle_ai_turn(fighter)
         else:

@@ -131,25 +131,25 @@ class CLI:
             except ValueError:
                 print("That's not a number. Try again...")
 
-    def choose_attack_target(self, enemy_team):
-        while True:
-            try:
-                line()
-                print(f"Who do you want to {red('attack?')}")
-                print()
-                time.sleep(T)
-                for num, enemy in enumerate(enemy_team):
-                    print(f"{blue(num+1)} | {enemy}")
-                print()
-                time.sleep(T)
-                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                if 0 < int(input_num) <= len(enemy_team):
-                    return enemy_team[int(input_num)-1]
-                else:
-                    print("Who? Try again...")
-                    time.sleep(T)
-            except ValueError:
-                print("That's not a number. Try again...")
+    # def choose_attack_target(self, enemy_team):
+    #     while True:
+    #         try:
+    #             line()
+    #             print(f"Who do you want to {red('attack?')}")
+    #             print()
+    #             time.sleep(T)
+    #             for num, enemy in enumerate(enemy_team):
+    #                 print(f"{blue(num+1)} | {enemy}")
+    #             print()
+    #             time.sleep(T)
+    #             input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+    #             if 0 < int(input_num) <= len(enemy_team):
+    #                 return enemy_team[int(input_num)-1]
+    #             else:
+    #                 print("Who? Try again...")
+    #                 time.sleep(T)
+    #         except ValueError:
+    #             print("That's not a number. Try again...")
 
     def display_attack(self, attacker, defender, amt, is_crit):
         line()
@@ -169,42 +169,42 @@ class CLI:
         print(f"{defender.name} {yellow('defends')}")
         time.sleep(1.5)
 
-    def choose_skill(self, skills):
-        while True:
-            try:
-                line()
-                print("Which skill do you want to use?")
-                print()
-                time.sleep(T)
-                for num, skill in enumerate(skills):
-                    print(f"{blue(num+1)} | {skill.name}{' '*(18-len(skill.name))}| {skill.sp} SP |")
-                print()
-                time.sleep(T)
-                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                line()
-                if 0 < int(input_num) <= len(skills):
-                    return skills[int(input_num)-1]
-                else:
-                    print("What skill? Try again...")
-            except ValueError:
-                print("That's not a number. Try again...")
+    # def choose_skill(self, skills):
+    #     while True:
+    #         try:
+    #             line()
+    #             print("Which skill do you want to use?")
+    #             print()
+    #             time.sleep(T)
+    #             for num, skill in enumerate(skills):
+    #                 print(f"{blue(num+1)} | {skill.name}{' '*(18-len(skill.name))}| {skill.sp} SP |")
+    #             print()
+    #             time.sleep(T)
+    #             input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+    #             line()
+    #             if 0 < int(input_num) <= len(skills):
+    #                 return skills[int(input_num)-1]
+    #             else:
+    #                 print("What skill? Try again...")
+    #         except ValueError:
+    #             print("That's not a number. Try again...")
 
-    def choose_skill_target(self, skill: str, enemy_team: list):
-        while True:
-            try:
-                print(f"Who do you want to use {magenta(skill)} on?")
-                print()
-                for num, enemy in enumerate(enemy_team):
-                    print(f"({blue(num+1)}) {enemy}")
-                print()
-                time.sleep(T)
-                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                if 0 < int(input_num) <= len(enemy_team):
-                    return enemy_team[int(input_num)-1]
-                else:
-                    print("Who? Try again...")
-            except ValueError:
-                print("That's not a number. Try again...")
+    # def choose_skill_target(self, skill: str, enemy_team: list):
+    #     while True:
+    #         try:
+    #             print(f"Who do you want to use {magenta(skill)} on?")
+    #             print()
+    #             for num, enemy in enumerate(enemy_team):
+    #                 print(f"({blue(num+1)}) {enemy}")
+    #             print()
+    #             time.sleep(T)
+    #             input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+    #             if 0 < int(input_num) <= len(enemy_team):
+    #                 return enemy_team[int(input_num)-1]
+    #             else:
+    #                 print("Who? Try again...")
+    #         except ValueError:
+    #             print("That's not a number. Try again...")
 
     def display_skill_fail(self, name, sp):
         line()
@@ -216,43 +216,43 @@ class CLI:
         self.display_action("*")
         print(f"{defender} takes {dmg} damage")
 
-    def choose_item(self, items):
-        while True:
-            try:
-                line()
-                print("Which item do you want to use?")
-                print()
-                time.sleep(T)
-                for num, item in enumerate(items):
-                    print(f"{blue(num+1)} | {item.name}{' '*(18-len(item.name))}| {item.description}")
-                print()
-                time.sleep(T)
-                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                line()
-                if 0 < int(input_num) <= len(items):
-                    return items[int(input_num)-1]
-                else:
-                    print("What item? Try again...")
-            except ValueError:
-                print("That's not a number. Try again...")
+    # def choose_item(self, items):
+    #     while True:
+    #         try:
+    #             line()
+    #             print("Which item do you want to use?")
+    #             print()
+    #             time.sleep(T)
+    #             for num, item in enumerate(items):
+    #                 print(f"{blue(num+1)} | {item.name}{' '*(18-len(item.name))}| {item.description}")
+    #             print()
+    #             time.sleep(T)
+    #             input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+    #             line()
+    #             if 0 < int(input_num) <= len(items):
+    #                 return items[int(input_num)-1]
+    #             else:
+    #                 print("What item? Try again...")
+    #         except ValueError:
+    #             print("That's not a number. Try again...")
 
-    def choose_item_target(self, item: str, targets: list):
-        while True:
-            try:
-                print(f"Who do you want to use {cyan(item)} on?")
-                print()
-                for num, target in enumerate(targets):
-                    print(f"({blue(num+1)}) {target}")
-                print()
-                time.sleep(T)
+    # def choose_item_target(self, item: str, targets: list):
+    #     while True:
+    #         try:
+    #             print(f"Who do you want to use {cyan(item)} on?")
+    #             print()
+    #             for num, target in enumerate(targets):
+    #                 print(f"({blue(num+1)}) {target}")
+    #             print()
+    #             time.sleep(T)
                 
-                input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
-                if 0 < int(input_num) <= len(targets):
-                    return targets[int(input_num)-1]
-                else:
-                    print("Who? Try again...")
-            except ValueError:
-                print("That's not a number. Try again...")
+    #             input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
+    #             if 0 < int(input_num) <= len(targets):
+    #                 return targets[int(input_num)-1]
+    #             else:
+    #                 print("Who? Try again...")
+    #         except ValueError:
+    #             print("That's not a number. Try again...")
 
     def display_use_item(self, item_user, item, item_target, amount):
         line()
@@ -261,8 +261,18 @@ class CLI:
         if item.type == "damage":
             print(f"{item_target} takes {amount} damage")
         elif item.type == "heal":
-            print(f"{item_target} is healed for {amount} HP")
+            print(f"{item_target} restores {amount} HP")
 
+    def display_heal(self, target, amount):
+        print(f"{item_target} restores {amount} HP")
+    
+    def display_damage(self):
+        pass
+
+    def display_no_items(self):
+        line()
+        print(f"{fighter} doesn't have any items to use")
+    
     def display_fighter_died(self, fighter):
         print(f"{fighter} is dead!")
 

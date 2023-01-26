@@ -74,6 +74,9 @@ class Character:
     def use_item(self, item: Item, target) -> None:
         item.use(target)
 
+    def resolve_item(self):
+        pass
+
     
 # class Player(Character):
 #     pass
