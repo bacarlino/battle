@@ -10,10 +10,13 @@ class Skill:
     #     self.targets = targets
 
     def __str__(self):
-        return self.name
+        return f"{self.sp} SP | {self.name}"
 
     def reduce_cooldown(self, amount):
         self.cd -= amount
+
+    def reset_cooldown(self):
+        self.cd = self.init_cd
 
 
 # class TestSkill(Skill):
@@ -45,7 +48,8 @@ class PutridFlatulant(Skill):
     desc = "A thick green cloud of skin melting filth"
     sp = 5
     dmg = 10
-    cd = 3
+    init_cd = 3
+    cd = init_cd
     targets = 0
 
 
@@ -55,7 +59,8 @@ class RoundhouseKick(Skill):
     desc = "A powerful spinning kick to the face"
     sp = 5
     dmg = 10
-    cd = 3
+    init_cd = 3
+    cd = init_cd
 
 
 class ThroatPunch(Skill):
@@ -63,7 +68,8 @@ class ThroatPunch(Skill):
     desc = "A quick sharp jab right to the jugular"
     sp = 5
     dmg = 10
-    cd = 3
+    init_cd = 3
+    cd = init_cd
 
 
 class Uppercut(Skill):
@@ -71,12 +77,13 @@ class Uppercut(Skill):
     desc = "A massive sweeping blow to the chin"
     sp = 5
     dmg = 10
-    cd = 3
-
+    init_cd = 3
+    cd = init_cd
 
 class SuperSlap(Skill):
     name = "Super Slap"
     desc = "A wide swinging open palm slap to the face"
     sp = 5
     dmg = 10
-    cd = 3
+    init_cd = 3
+    cd = init_cd

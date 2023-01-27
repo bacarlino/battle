@@ -1,41 +1,7 @@
 import random
-from utilities import *
+import status
 from items import Item
-
-
-class StatusEffect:
-    
-    def __init__(self, duration):
-        self.duration = duration
-
-    def decrease_duration(self, amount):
-        self.duration -= amount
-
-    def increase_duration(self, amount):
-        self.duration += amount
-
-
-class Blinded(StatusEffect):
-    name = "Blinded"
-    description = "Significantly decreased accuracy"
-
-    def __init__(self, duration=1):
-        super().__init__(duration)
-
-class Unconcious(StatusEffect):
-    name = "Unconcious"
-    description = "Lose a turn during the next round"
-    
-    def __init__(self, duration=1):
-        super().__init__(duration)
-
-class Amped(StatusEffect):
-    name = "Amped"
-    duration = 1
-    description = "Gain an extra turn during the next round"
-
-    def __init__(self, duration=1):
-        super().__init__(duration)
+from utilities import *
 
 
 class Character:
@@ -55,13 +21,20 @@ class Character:
         self.is_player = is_player
 
     def __str__(self):
+        statuses = ""
+        for status in self.statuses:
+            statuses += red(status.name + " ")
+
         return (
             f"{self.name}{' '*(10-len(self.name))}|"
             f"{' '*(4-len(str(self.hp)))} {self.hp} HP |"
             f"{' '*(4-len(str(self.sp)))}{self.sp} SP | "
-            f"{yellow('Defending ' if self.defending else '')}"
-            f"{red('Blinded ') if 'Blinded' in self.statuses else ''}"
+            f"{yellow('Defending ' if self.defending else '')}" +
+            # f"{red('Blinded ') if 'blind' self.statuses else ''}
+            statuses
         )
+
+    
 
     def __repr__(self):
         return f"Character(name={self.name}, hp={self.hp}, sp={self.sp})"
@@ -107,8 +80,10 @@ class Character:
         self.items.remove(item)
 
     def add_status(self, status):
-        self.statuses.append(status)
-        print("TESTING: ADDED STATUS")
+        self.statuses.append(status())
+
+    def remove_status(self, status):
+        self.statuses.remove(status)
 
     def turn_refresh(self):
         """Reset defending status, reduce skill cooldowns and status durations"""
@@ -116,9 +91,14 @@ class Character:
             self.stop_defending()
         for skill in self.skills:
             skill.reduce_cooldown(1)
+            if skill.cd == 0:
+                skill.reset_cooldown
+            
+    def update_statuses(self):
         for status in self.statuses:
             status.decrease_duration(1)
-
+            if status.duration == 0:
+                self.remove_status(status)
 
 
 # class Team:

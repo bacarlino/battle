@@ -1,5 +1,5 @@
-import time
 import random
+import status
 from character import Character
 
 
@@ -20,7 +20,8 @@ class Fight:
             "attack": self.handle_attack,
             "defend": self.handle_defend,
             "skill": self.choose_skill,
-            "item": self.choose_item
+            "item": self.choose_item,
+            "invalid": self.handle_player_turn
         }
 
         while True:
@@ -47,10 +48,11 @@ class Fight:
 
         elif choice in ["r", "R", "run", "Run", "RUN", "5"]:
             print("RUNNING AWAY!")
+            return "invalid"
 
         else:
             self.cli.display_invalid_command()
-            self.cli.display_options()
+            return "invalid"
 
     def handle_attack(self, attacker, target=None):
         if attacker.is_player:
@@ -69,7 +71,6 @@ class Fight:
         self.cli.display_defend(defender)
 
     def choose_skill(self, skill_user):
-  
         skill = self.cli.choose("skill", skill_user.skills)
         if skill_user.can_use_skill(skill):
             avail_targets = self.get_avail_targets(self.enemy_team)
@@ -77,7 +78,7 @@ class Fight:
             self.handle_skill(skill_user, target, skill)
         else:    
             self.cli.display_skill_fail(skill_user.name, skill.sp)
-            self.cli.display_options()
+            self.handle_player_turn(skill_user)
 
     def handle_skill(self, skill_user, target, skill):
 
@@ -133,7 +134,7 @@ class Fight:
         item_user.remove_item(item)
         item_target.add_status(item.status)
         self.cli.display_use_item(item_user.name, item.name, item_target.name)
-        self.cli.display_add_status(item_target.name, item.status)
+        self.cli.display_add_status(item_target.name, item.status.name, item.status.description)
 
 
     def handle_item(self, item_user, item, item_target):
@@ -186,14 +187,16 @@ class Fight:
                 fighter.turn_refresh()
                 if  fighter.is_dead():
                     continue                
-                self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
                 self.cli.display_fighters_turn(fighter.name, round)
+                self.cli.display_all_fighters(self.player_team, fighter, self.enemy_team)
                 
                 if fighter.is_player:
                     self.handle_player_turn(fighter)
                 else:
                     self.cli.enemy_turn_pause()
                     self.handle_ai_turn(fighter)
+                
+                fighter.update_statuses()
 
                 player_deaths = 0
                 enemy_deaths = 0

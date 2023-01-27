@@ -25,6 +25,7 @@ char5 = Character("Jimbo", 12, 4, [SuperSlap(), Uppercut()])
 
 char2.add_item(items.Knife())
 char1.add_item(items.Bandage())
+char1.add_item(items.PepperSpray())
 char2.add_item(items.PepperSpray())
 
 

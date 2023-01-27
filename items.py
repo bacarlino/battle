@@ -1,4 +1,4 @@
-
+import status
 
 class Item:
 
@@ -43,7 +43,7 @@ class Knife(DamageHPItem):
 
 class PepperSpray(DebuffItem):
     name = "Pepper Spray"
-    status = "Blinded"
+    status = status.Blind
     description = "Burns eyes"
 
  
