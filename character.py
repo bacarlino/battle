@@ -48,7 +48,6 @@ class Character:
         elif luck > 0.9:
             crit = True
             dmg = self.atk * 2
-        
         return dmg, crit
 
     def take_damage(self, amt):

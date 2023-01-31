@@ -14,7 +14,6 @@ class Bat(Enemy):
 
     def __init__():
         super().__init__(
-            self,
             name="Bat",
             hp = (2,6),
             speed = (1, 100),
@@ -25,8 +24,8 @@ class Bat(Enemy):
 @dataclass
 class TestBat(Enemy):
     name: str = "Test Bat"
-    hp: tuple = 5
-    speed: tuple = 50
+    hp: int = 5
+    speed: int = 50
 
 
 
