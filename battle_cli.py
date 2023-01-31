@@ -1,13 +1,13 @@
 import time
 from utilities import *
 
-T = 1
+T = .5
 
 def line():
         print('----------------------------------------------')
 
 
-class CLI:
+class BattleCLI:
 
     def press_enter_pause(self):
         input(f"Press {blue('ENTER / RETURN')} to continue")
@@ -22,7 +22,7 @@ class CLI:
 
     def display_title(self):
         print(
-            '''
+            red('''
 
  (        (                      )               
  )\ )     )\ )     (          ( /(          )    
@@ -32,50 +32,67 @@ class CLI:
 | __|     | |       | (_ |   | __ |     | |      
 |_|      |___|       \___|   |_||_|     |_|      
                                                 '''
-        )
-        time.sleep(1.5)
+        ))
+        time.sleep(1)
 
     def display_instructions(self):
         print(
-            "Instructions:\n"
             f"- {red('Defeat')} all of the enemies by reducing their HP (hit points) to 0 \n"
-            f"- {yellow('Defend')} to reduce incoming damage\n"
             f"- {magenta('Skills')} use SP (skill points) and do more damage\n"
-            f"- {cyan('Items')} can be used for various effects"
+            f"- {cyan('Items')} can be used for various effects\n"
+            f"- {yellow('Defend')} to reduce incoming damage"
             )
         print()
         time.sleep(1)
 
+    def display_help(self):
+        line()
+        print()
+        self.display_instructions()
+        self.press_enter_pause()
+
     def display_all_fighters(self, player_team, fighter, enemy_team):
         # line()
         print()
-        print(green('Your Team'))
-        time.sleep(.1)
+        print(green('           -- Your Team --'))
+        time.sleep(.05)
         for player in player_team:
             if player == fighter:
-                print(f"{green(player.__str__())}")
+                print(f"{yellow(player.__str__())}")
             else:
                 if player.is_dead():
                     print(f"{black(player)}")
                 else:
                     print(f"{white(player)}")
-            time.sleep(.1)
-                
+            time.sleep(.05)
+
         time.sleep(T)
         print()
-        print(red("Your Enemies"))
+        print(red("         -- Your Enemies --"))
         time.sleep(.1)
         for enemy in enemy_team:
             if enemy == fighter:
-                print(f"{red(enemy.__str__())}")
+                print(f"{yellow(enemy.__str__())}")
             else:
                 if enemy.is_dead():
                     print(f"{black(enemy)}")
                 else:
                     print(f"{white(enemy)}")
+            
             time.sleep(.1)
         print()
         time.sleep(T)
+
+    # def display_team(self, team):
+    #     for char in team:
+    #         if char == fighter:
+    #             print(f"{red(char.__str__())}")
+    #         else:
+
+    #             if char.is_dead():
+    #                 print(f"{black(char)}")
+    #             else:
+    #                 print(f"{white(char)}")
 
     def display_fighters_turn(self, name, round):
         line()
@@ -83,15 +100,15 @@ class CLI:
         time.sleep(T)
 
     def display_options(self):
-        print('+-----------------------------------------+')
-        print(f'| {red("(A)ttack")} | {yellow("(D)efend")} | {magenta("(S)kill")} | {cyan("(I)tem)")} |')
-        print('+-----------------------------------------+')
+        print(f"+-----------------------------------------+ {black('---(H)elp')}")
+        print(f"| {red('(A)ttack')} | {magenta('(S)kill')} | {cyan('(I)tem)')} | {green('(D)efend')} | {black('---(O)ptions')}")
+        print(f"+-----------------------------------------+ {black('---(R)estart')}")
         # time.sleep(T)
     
     def get_main_option(self, name):
-        print(f"Your Turn - Type a {blue('LETTER')} then press {blue('ENTER')}")
-        # print()
-        choice = input(f'{green(name)}: ')
+        print(f"YOUR TURN - Type a {blue('LETTER')} then press {blue('ENTER')}")
+        print()
+        choice = input(f'{yellow(name)} => ')
         return choice
 
     def display_action(self, symbol):
@@ -124,15 +141,27 @@ class CLI:
                     print(f"{blue(num+1)} | {option}")
                     time.sleep(.1)
                 print()
+                print(f"{blue(num+2)} | CANCEL")
+                time.sleep(.1)
+
+                print()
                 time.sleep(T)
                 input_num = input(f"Type a {blue('NUMBER')} then press {blue('ENTER')}: ")
                 if 0 < int(input_num) <= len(choices):
                     return choices[int(input_num)-1]
+                elif int(input_num) == len(choices)+1:
+                    return None
                 else:
                     print("That's not a choice. Try again...")
                     time.sleep(T)
             except ValueError:
                 print("That's not a number. Try again...")
+
+    def cancel_choice(self):
+        line()
+        print("Canceled")
+        line()
+        time.sleep(T)
 
     def display_attack(self, attacker, defender, amt, is_crit):
         line()
@@ -145,6 +174,10 @@ class CLI:
 
     def display_crit(self):
         print("BOOM! A critical hit!")
+        time.sleep(T)
+
+    def display_miss(self, char):
+        print(f"{char} misses")
         time.sleep(T)
 
     def display_defend(self, defender):
@@ -174,13 +207,26 @@ class CLI:
         print(f"{target} restores {amount} HP")
         time.sleep(2)
     
-    def display_take_damage(self, target, amount):
-        print(f"{target} takes {amount} damage")
+    def display_take_damage(self, name, amount, cause=False):
+        if cause:
+            print(f"{name} {cause} and takes {amount} damage")
+        else:
+            print(f"{name} takes {amount} damage")
         time.sleep(2)
 
-    def display_add_status(self, target, status, description):
-        print(f"{target} is {status} and {description}")
+    def display_lost_turn(self, character, status):
+        print(f"{character} {status.verb} and lost their turn")
         time.sleep(2)
+
+    def display_add_status(self, target, status_verb):
+        print(f"{target} {status_verb}")
+        time.sleep(2)
+    
+    def display_amped_effect(self, char):
+        print(f"{char} is Amped and takes an extra turn this round")
+
+    def display_unconcious_effedt(self, char):
+        print(f"{char} is Unconcious and loses their turn")
 
     def display_no_items(self, item_user):
         line()

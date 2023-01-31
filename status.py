@@ -1,25 +1,16 @@
 from enum import Enum
-import utilities
 
-
-class Status(Enum):
-    DEFENDING = "defending"
-    UNCONCIOUS = "unconcious"
-    BLIND = "blind"
-    AMPED = "amped"
-    POISONED = "poisoned"
-
-    def __str__(self):
-        return self.value
-
-    def cap(self):
-        return self.value.capitalize()
 
 
 class StatusEffect:
+    amount = None
+    verb = None
     
     def __init__(self, duration):
         self.duration = duration
+
+    def __str__(self):
+        return self.name
 
     def decrease_duration(self, amount):
         self.duration -= amount
@@ -27,25 +18,48 @@ class StatusEffect:
     def increase_duration(self, amount):
         self.duration += amount
 
+class BuffStat(StatusEffect):
+    type = "buff"
 
-class Blind(StatusEffect):
-    name = "Blind"
-    description = "can't see shit"
+class DebuffStat(StatusEffect):
+    type = "debuff"
 
-    def __init__(self, duration=1):
-        super().__init__(duration)
 
-class Unconcious(StatusEffect):
-    name = "Unconcious"
-    description = "Lose a turn during the next round"
-    
-    def __init__(self, duration=1):
-        super().__init__(duration)
 
-class Amped(StatusEffect):
+class Amped(BuffStat):
     name = "Amped"
-    duration = 1
-    description = "Gain an extra turn during the next round"
+    description = "gains an extra turn next round"
+    verb = "is amped up"
 
-    def __init__(self, duration=1):
-        super().__init__(duration)
+    def __init__(self):
+        super().__init__(1)
+
+
+class Blind(DebuffStat):
+    name = "Blind"
+    description = "can't see jack shit"
+    verb = "is blinded"
+
+    def __init__(self):
+        super().__init__(2)
+
+
+class Unconcious(DebuffStat):
+    name = "Unconcious"
+    description = "loses a turn"
+    verb = "is unconcious"
+    effect = "loses a turn"
+    
+    def __init__(self):
+        super().__init__(1)
+
+
+class Bleeding(DebuffStat):
+    name = "Bleeding"
+    description = "Lose HP at the start of turn"
+    verb = "is bleeding"
+    effect = "loses HP"
+    amount = 2
+
+    def __init__(self):
+        super().__init__(3)

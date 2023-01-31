@@ -1,51 +1,54 @@
 import random
-import status
-from items import Item
+import skills
+import items
 from utilities import *
 
 
 class Character:
-    def __init__(self, name='Player', hp=20, spd=5, skills=[], is_player=False):      
+    def __init__(self, name, hp, sp, speed, skills, items, is_player=False):      
         self.name = name
-        self.hp = hp
-        self.sp = 10
+        self.max_hp = hp
+        self.hp = hp 
+        self.sp = sp
         self.atk = 5
         self.accuracy = .05
-        self.speed = spd
+        self.speed = speed
         self.skills = skills
         self.defending = False
-        self.items = []
+        self.items = items
         self.statuses = []
-        self.active = True
         self.actions = ["attack", "defend", "skill"]
         self.is_player = is_player
 
     def __str__(self):
         statuses = ""
         for status in self.statuses:
-            statuses += red(status.name + " ")
-
+            if status.type == "buff":
+                statuses += green(status.name + " ")
+            else:
+                statuses += red(status.name + " ")
         return (
-            f"{self.name}{' '*(10-len(self.name))}|"
-            f"{' '*(4-len(str(self.hp)))} {self.hp} HP |"
+            f"{self.name}{' '*(8-len(self.name))}|"
+            f"{' '*(3-len(str(self.hp)))} {self.hp}/{self.max_hp} HP |"
             f"{' '*(4-len(str(self.sp)))}{self.sp} SP | "
-            f"{yellow('Defending ' if self.defending else '')}" +
-            # f"{red('Blinded ') if 'blind' self.statuses else ''}
-            statuses
+            # f"{' '*(4-len(str(self.sp)))}{self.speed} Speed | "
+            f"{yellow('Defending ' if self.defending else '')}" + statuses
         )
-
-    
 
     def __repr__(self):
         return f"Character(name={self.name}, hp={self.hp}, sp={self.sp})"
 
     def attack(self):
-        crit = False
+        crit = False        
         adj = int(self.atk * 0.25)
         dmg = random.randint(self.atk - adj, self.atk + adj)
-        if random.random() > 0.9:
+        luck = random.random()
+        if luck < 0.1 or "blind" in self.statuses:
+            return None, False
+        elif luck > 0.9:
             crit = True
             dmg = self.atk * 2
+        
         return dmg, crit
 
     def take_damage(self, amt):
@@ -73,53 +76,23 @@ class Character:
     def is_dead(self):
         return self.hp <= 0
 
-    def add_item(self, item: Item):
+    def add_item(self, item):
         self.items.append(item)
     
-    def remove_item(self, item: Item):
+    def remove_item(self, item):
         self.items.remove(item)
+
+    def status_lst(self) -> list:
+        return self.statuses
 
     def add_status(self, status):
         self.statuses.append(status())
 
     def remove_status(self, status):
         self.statuses.remove(status)
-
-    def turn_refresh(self):
-        """Reset defending status, reduce skill cooldowns and status durations"""
-        if self.defending:
-            self.stop_defending()
-        for skill in self.skills:
-            skill.reduce_cooldown(1)
-            if skill.cd == 0:
-                skill.reset_cooldown
             
     def update_statuses(self):
         for status in self.statuses:
             status.decrease_duration(1)
             if status.duration == 0:
                 self.remove_status(status)
-
-
-# class Team:
-#     """Not implemented"""
-#     def __init__(self, members: list[Character]):
-#         self.full_team = members
-#         self.active_team = members
-#         self.inactive_team = []
-
-#     def get_active_team(self) -> list[Character]:
-#         return self.active_team
-
-#     def add_member(self, member) -> None:
-#         self.full_team.append(member)
-#         self.active_team.append(member)
-    
-#     def remove_member(self, member) -> None:
-#         self.full_team.remove(member)
-    
-#     def set_active(self, member) -> None:
-#         pass
-
-
-
