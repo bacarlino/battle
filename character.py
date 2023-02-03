@@ -31,8 +31,9 @@ class Character:
             f"{self.name}{' '*(10-len(self.name))}|"
             f"{' '*(3-len(str(self.hp)))} {self.hp}/{self.max_hp} HP |"
             f"{' '*(4-len(str(self.sp)))}{self.sp} SP | "
-            # f"{' '*(4-len(str(self.sp)))}{self.speed} Speed | "
-            f"{yellow('Defending ' if self.defending else '')}" + statuses
+            f"{black('Dead' if self.is_dead() else '')}"
+            f"{yellow('Defending ' if self.defending else '')}"
+            + statuses
         )
 
     def __repr__(self):
@@ -54,6 +55,7 @@ class Character:
         result = self.hp - amt
         if result <= 0:
             self.hp = 0
+            self.statuses = []
         else:
             self.hp = result
         
@@ -92,6 +94,9 @@ class Character:
 
     def remove_status(self, status):
         self.statuses.remove(status)
+
+    def clear_all_statuses(self):
+        self.statuses = []
             
     def update_statuses(self):
         for status in self.statuses:

@@ -101,6 +101,10 @@ class Battle:
         skill_user.use_skill(skill)
         target.take_damage(dmg)
         self.cli.display_use_skill(skill_user.name, skill, target.name, dmg)
+
+        if skill.status:   
+            target.add_status(skill.status)
+            self.cli.display_add_status(target.name, skill.status.verb)
         
         if target.is_dead():
             self.cli.display_fighter_died(target.name)

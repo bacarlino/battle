@@ -11,7 +11,7 @@ class Skill:
 
     def rand_damage(self) -> int:
         adjusted = self.dmg * DMG_RANGE
-        return int(random.randint(self.dmg - adjusted, self.dmg + adjusted ))
+        return int(random.randrange(self.dmg - adjusted, self.dmg + adjusted ))
         
     def hits_all(self):
         return self.dmg_all
