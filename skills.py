@@ -4,6 +4,7 @@ DMG_RANGE = 0.25
 
 class Skill:
     dmg_all = False
+    status = None
 
     def __str__(self) -> str:
         return f"{self.name}{' '*(20-len(self.name))}| {self.sp} SP | "
@@ -12,15 +13,17 @@ class Skill:
         adjusted = self.dmg * DMG_RANGE
         return int(random.randint(self.dmg - adjusted, self.dmg + adjusted ))
         
-    def all(self):
+    def hits_all(self):
         return self.dmg_all
+
 
 class PutridFlatulant(Skill):
     name = "Putrid Flatulant"
     desc = "A thick green cloud of skin melting filth"
     sp = 4
     dmg = 10
-    all = True
+    dmg_all = True
+    status = "poison"
 
 
 class RoundhouseKick(Skill):
@@ -37,7 +40,6 @@ class ThroatPunch(Skill):
     dmg = 8
 
 
-
 class Uppercut(Skill):
     name = "Uppercut"
     desc = "A massive sweeping blow to the chin"
@@ -52,13 +54,14 @@ class SuperSlap(Skill):
     dmg = 8
 
 
-
 class NeckBite(Skill):
     """Bat"""
     name = "NeckBite"
     desc = "Two fangs deep into the flesh"
     sp = 2
     dmg = 2
+    status = "bleed"
+
 
 class GuanoBath(Skill):
     """Bat"""
@@ -66,6 +69,7 @@ class GuanoBath(Skill):
     des = "A smelly spray of wet bat shit"
     sp = 2
     dmg = 2
-    all = True
+    dmg_all = True
+    status = "poison"
 
 

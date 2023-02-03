@@ -1,5 +1,3 @@
-from enum import Enum
-
 
 
 class StatusEffect:
@@ -18,12 +16,20 @@ class StatusEffect:
     def increase_duration(self, amount):
         self.duration += amount
 
+
 class BuffStat(StatusEffect):
     type = "buff"
+
 
 class DebuffStat(StatusEffect):
     type = "debuff"
 
+
+class Dead(StatusEffect):
+    name = "Dead"
+    description = ""
+    verb = "has died"
+    effect = "is dead"
 
 
 class Amped(BuffStat):
@@ -59,7 +65,17 @@ class Bleeding(DebuffStat):
     description = "Lose HP at the start of turn"
     verb = "is bleeding"
     effect = "loses HP"
-    amount = 2
 
     def __init__(self):
+        super().__init__(3)
+
+
+class Poison(DebuffStat):
+    name = "Poisened"
+    description = "Lose HP and SP each turn"
+    verb = "is poisened"
+    effect = "loses HP and SP"
+    amount = 2
+
+    def __init_(self):
         super().__init__(3)

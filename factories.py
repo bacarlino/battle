@@ -67,10 +67,6 @@ def build_team(size=2, is_player=False):
     return team.Team(team_list)
 
 
-
-
-
-
 def create_enemy(chartype):
     return CHARTYPES[chartype]()
 
