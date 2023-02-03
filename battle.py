@@ -28,7 +28,7 @@ class Battle:
             choice = self.cli.get_main_option(fighter.name)
             choice = self.proc_choice(fighter, choice)
             if choice == "restart":
-                return True
+                return "restart"
             handler[choice](fighter)
             break
 
@@ -61,7 +61,7 @@ class Battle:
                 return
         amt, is_crit = attacker.attack()
         if not amt:
-            self.cli.display_miss(attacker)
+            self.cli.display_miss(attacker.name)
             return
         if target.defending:
             amt = int(amt / 2)
@@ -93,17 +93,15 @@ class Battle:
             self.handle_player_turn(skill_user)
 
     def handle_skill(self, skill_user, target, skill):
+        dmg = skill.rand_damage()
 
-        # damage calc method?
-        dmg = skill.dmg
-        adj = dmg*0.25
-        dmg = int(random.uniform(dmg - adj, dmg + adj))
-        if target.defending:
+        if target.is_defending():
             dmg = int(dmg / 2)
         
         skill_user.use_skill(skill)
         target.take_damage(dmg)
         self.cli.display_use_skill(skill_user.name, skill, target.name, dmg)
+        
         if target.is_dead():
             self.cli.display_fighter_died(target.name)
 
@@ -191,13 +189,14 @@ class Battle:
         avail_target = self.get_avail_targets(self.player_team)
         action = random.choice(fighter.actions)
         target = random.choice(avail_target)
-        skill = random.choice(fighter.skills)
+        if fighter.skills:
+            skill = random.choice(fighter.skills)
         if action == "attack":
             self.handle_attack(fighter, target)
         elif action == "defend":
             self.handle_defend(fighter)
         elif action == "skill":
-            if fighter.can_use_skill(skill):
+            if fighter.has_skills():
                 self.handle_skill(fighter, target, skill)
             else:
                 self.handle_ai_turn(fighter)

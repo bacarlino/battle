@@ -1,25 +1,26 @@
+import random
 
+DMG_RANGE = 0.25
 
 class Skill:
-    
-    def __str__(self):
+    dmg_all = False
+
+    def __str__(self) -> str:
         return f"{self.name}{' '*(20-len(self.name))}| {self.sp} SP | "
 
-    def reduce_cooldown(self, amount):
-        self.cd -= amount
-
-    def reset_cooldown(self):
-        self.cd = self.init_cd
-
+    def rand_damage(self) -> int:
+        adjusted = self.dmg * DMG_RANGE
+        return int(random.randint(self.dmg - adjusted, self.dmg + adjusted ))
+        
+    def all(self):
+        return self.dmg_all
 
 class PutridFlatulant(Skill):
     name = "Putrid Flatulant"
     desc = "A thick green cloud of skin melting filth"
     sp = 4
     dmg = 10
-    init_cd = 3
-    cd = init_cd
-    targets = 0
+    all = True
 
 
 class RoundhouseKick(Skill):
@@ -27,8 +28,6 @@ class RoundhouseKick(Skill):
     desc = "A powerful spinning kick to the face"
     sp = 5
     dmg = 12
-    init_cd = 3
-    cd = init_cd
 
 
 class ThroatPunch(Skill):
@@ -36,8 +35,7 @@ class ThroatPunch(Skill):
     desc = "A quick sharp jab right to the jugular"
     sp = 3
     dmg = 8
-    init_cd = 3
-    cd = init_cd
+
 
 
 class Uppercut(Skill):
@@ -45,8 +43,6 @@ class Uppercut(Skill):
     desc = "A massive sweeping blow to the chin"
     sp = 4
     dmg = 10
-    init_cd = 3
-    cd = init_cd
 
 
 class SuperSlap(Skill):
@@ -54,5 +50,22 @@ class SuperSlap(Skill):
     desc = "A wide swinging open palm slap to the face"
     sp = 3
     dmg = 8
-    init_cd = 3
-    cd = init_cd
+
+
+
+class NeckBite(Skill):
+    """Bat"""
+    name = "NeckBite"
+    desc = "Two fangs deep into the flesh"
+    sp = 2
+    dmg = 2
+
+class GuanoBath(Skill):
+    """Bat"""
+    name = "Guano Bath"
+    des = "A smelly spray of wet bat shit"
+    sp = 2
+    dmg = 2
+    all = True
+
+

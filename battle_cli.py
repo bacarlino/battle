@@ -33,7 +33,7 @@ class BattleCLI:
 |_|      |___|       \___|   |_||_|     |_|      
                                                 '''
         ))
-        time.sleep(1)
+        # time.sleep(1)
 
     def display_instructions(self):
         print(
@@ -43,7 +43,7 @@ class BattleCLI:
             f"- {yellow('Defend')} to reduce incoming damage"
             )
         print()
-        time.sleep(1)
+        # time.sleep(1)
 
     def display_help(self):
         line()
@@ -54,7 +54,7 @@ class BattleCLI:
     def display_all_fighters(self, player_team, fighter, enemy_team):
         # line()
         print()
-        print(green('           -- Your Team --'))
+        print(green('         -- Your Team --'))
         time.sleep(.05)
         for player in player_team:
             if player == fighter:
@@ -68,7 +68,7 @@ class BattleCLI:
 
         time.sleep(T)
         print()
-        print(red("         -- Your Enemies --"))
+        print(red("        -- Your Enemies --"))
         time.sleep(.1)
         for enemy in enemy_team:
             if enemy == fighter:
@@ -106,6 +106,7 @@ class BattleCLI:
         # time.sleep(T)
     
     def get_main_option(self, name):
+        print("===========================================")
         print(f"YOUR TURN - Type a {blue('LETTER')} then press {blue('ENTER')}")
         print()
         choice = input(f'{yellow(name)} => ')
@@ -176,8 +177,9 @@ class BattleCLI:
         print("BOOM! A critical hit!")
         time.sleep(T)
 
-    def display_miss(self, char):
-        print(f"{char} misses")
+    def display_miss(self, name):
+        line()
+        print(f"{name} misses")
         time.sleep(T)
 
     def display_defend(self, defender):

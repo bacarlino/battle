@@ -5,19 +5,19 @@ from utilities import *
 
 
 class Character:
-    def __init__(self, name, hp, sp, speed, skills, items, is_player=False):      
+    def __init__(self, name, hp, sp, atk, speed=50, skills=[], items=[], is_player=False):      
         self.name = name
         self.max_hp = hp
         self.hp = hp 
         self.sp = sp
-        self.atk = 5
+        self.atk = atk
         self.accuracy = .05
         self.speed = speed
         self.skills = skills
         self.defending = False
         self.items = items
         self.statuses = []
-        self.actions = ["attack", "defend", "skill"]
+        # self.actions = ["attack", "defend", "skill"]
         self.is_player = is_player
 
     def __str__(self):
@@ -28,7 +28,7 @@ class Character:
             else:
                 statuses += red(status.name + " ")
         return (
-            f"{self.name}{' '*(8-len(self.name))}|"
+            f"{self.name}{' '*(10-len(self.name))}|"
             f"{' '*(3-len(str(self.hp)))} {self.hp}/{self.max_hp} HP |"
             f"{' '*(4-len(str(self.sp)))}{self.sp} SP | "
             # f"{' '*(4-len(str(self.sp)))}{self.speed} Speed | "
@@ -59,6 +59,9 @@ class Character:
         
     def defend(self):
         self.defending = True
+
+    def is_defending(self) -> bool:
+        return self.defending
     
     def stop_defending(self):
         self.defending = False
